@@ -52,13 +52,7 @@ app.get("/error", (req, res) => {
     });
 });
 
-app.get("*", (req, res) => {
-    res.render("404", {
-        title: "404",
-        name: "Green Cart",
-        errorMessage: "Page Not Found",
-    });
-});
+
 
 app.use('/user', userRouter)
 app.use('/product', productRouter)
@@ -66,6 +60,13 @@ app.use('/cart', cartRouter)
 app.use('/orders', orderRouter)
 app.use('/category', categoryRouter)
 
+app.get("*", (req, res) => {
+    res.render("404", {
+        title: "404",
+        name: "Green Cart",
+        errorMessage: "Page Not Found",
+    });
+})
 app.listen(port, async () => {
     try {
         await connectDB()

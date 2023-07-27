@@ -5,6 +5,9 @@ const { cloudinary } = require('../utils/cloudinary');
 const userRouter = express.Router()
 
 //////////////Get single user/////////////////
+userRouter.get('/',(req,res)=>{
+    res.status(200).send(`You are in user`)
+})
 userRouter.get('/find/:id',async(req,res)=>{
     
     try {
