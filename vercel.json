@@ -1,4 +1,6 @@
 {
+    "buildCommand": "next build",
+    "cleanUrls": true,
     "function" :{
         "user/register":{
             "memory":3008,
