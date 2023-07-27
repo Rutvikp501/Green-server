@@ -7,7 +7,6 @@
         "user/login":{
             "memory":3008,
             "maxDuration":60
-
         }
     },
     "version":2,
