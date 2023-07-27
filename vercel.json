@@ -2,20 +2,7 @@
     
     
     
-    "buildCommand": "next build",
-    "cleanUrls": true,
-    "devCommand": "next dev",
-    "framework": "nodejs",
-    "function" :{
-        "user/register":{
-            "memory":3008,
-            "maxDuration":60
-        },
-        "user/login":{
-            "memory":3008,
-            "maxDuration":60
-        }
-    },
+    
     "version":2,
     "builds":[
         {
