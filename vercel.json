@@ -1,6 +1,11 @@
 {
+    
+    
+    
     "buildCommand": "next build",
     "cleanUrls": true,
+    "devCommand": "next dev",
+    "framework": "nodejs",
     "function" :{
         "user/register":{
             "memory":3008,
