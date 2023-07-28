@@ -44,13 +44,6 @@ app.get('/test', (req, res) => {
     res.status(200).send('test page')
 })
 
-app.get("/error", (req, res) => {
-    res.render("404", {
-        title: "404",
-        name: "Green Cart",
-        errorMessage: "Page Not Found",
-    });
-});
 
 
 
@@ -61,11 +54,8 @@ app.use('/orders', orderRouter)
 app.use('/category', categoryRouter)
 
 app.get("*", (req, res) => {
-    res.render("404", {
-        title: "404",
-        name: "Green Cart",
-        errorMessage: "Page Not Found",
-    });
+    res.status(200).send('Page Note Found')
+    
 })
 app.listen(port, async () => {
     try {

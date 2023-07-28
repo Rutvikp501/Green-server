@@ -3,7 +3,7 @@ const { CartModel } = require('../Model/Cart/Cart.model');
 const cartRouter = express.Router()
 
 cartRouter.get('/',(req,res)=>{
-    res.status(200).send(`You are in user`)
+    res.status(200).send(`You are in Cart`)
 })
 
 //////////////Add cart/////////////////
