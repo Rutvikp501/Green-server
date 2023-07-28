@@ -70,7 +70,6 @@ app.get("*", (req, res) => {
 app.listen(port, async () => {
     try {
         await connectDB()
-        console.log(port)
 
     } catch (error) {
         console.log(error);
