@@ -36,8 +36,9 @@ productRouter.post('/',async(req,res)=>{
 })
 
 //////////////Update details/////////////////
-productRouter.patch('/edit/:id',async(req,res)=>{
-    const ID = req.params.id
+productRouter.post('/edit',async(req,res)=>{
+    //console.log(req.body);
+    const ID = req.body.id
     try {
         let updated = await ProductModel.findByIdAndUpdate({_id:ID},req.body,{ new: true })
         res.status(201).json(updated)
@@ -47,7 +48,7 @@ productRouter.patch('/edit/:id',async(req,res)=>{
 })
 
 //////////////Delete product/////////////////
-productRouter.delete('/delete/:id',async(req,res)=>{
+productRouter.delete('/delete',async(req,res)=>{
     const ID = req.params.id
     try {
         await ProductModel.findByIdAndDelete({_id:ID})
@@ -57,6 +58,33 @@ productRouter.delete('/delete/:id',async(req,res)=>{
     }
 })
 //////////////Active product/////////////////
+productRouter.post('/Active',async(req,res)=>{
+    const {id} = req.body
+    try {
+        let Productstatus = await ProductModel.find({_id:id})
+        let newstatus = "";
+      let status = "";
+      let msg = "";
+      if (Productstatus[0].status == 0) {
+        
+        newstatus = 1;
+        status = "success";
+        msg = "User Active successfully.";
+      } else {
+        newstatus = 0;
+        status = "failed";
+        msg = "User Delete successfully.";
+      } 
+       await ProductModel.findByIdAndUpdate(id, { status: newstatus });
+
+    res.status(200).send({
+        message: msg,
+      });
+    } catch (error) {
+        res.status(500).send(`Error deleting products: ${error.message}`) 
+    }
+})
+
 productRouter.patch('/active/:id',async(req,res)=>{  
     const { id } = request.body;
     try {
@@ -91,15 +119,53 @@ productRouter.patch('/active/:id',async(req,res)=>{
 //////////////Get popular products/////////////////
 productRouter.get('/popular',async(req,res)=>{
     try {
-        const product = await ProductModel.aggregate([{$sample:{size:4}}])
+        const product = await ProductModel.aggregate([{$sample:{size:4}},{$match:{status: "1"}}])
+        
         res.status(201).json(product)
     } catch (error) {
         res.status(500).send(`Error getting products data: ${error.message}`)
     }
 })
 //////////////Get all products/////////////////
+
+productRouter.get('/Admin_find',async(req,res)=>{
+    var query={}
+    try {
+        if(req.query.title){
+            const regex = new RegExp(req.query.title, 'i');
+            query.title = regex
+        }
+        if(req.query.category){
+            req.query.category.indexOf('Vegitable') != -1?req.query.category[req.query.category.indexOf('Vegitable')] = '64bd4fd982a0cf91f0098c4a':null
+            req.query.category.indexOf('Fruits') != -1?req.query.category[req.query.category.indexOf('Fruits')] = '64bd502f82a0cf91f0098c4e':null
+            req.query.category.indexOf('Spices_Herbs') != -1?req.query.category[req.query.category.indexOf('Spices_Herbs')] = '64bd504882a0cf91f0098c52':null
+            req.query.category.indexOf('Green_Leaves') != -1?req.query.category[req.query.category.indexOf('Green_Leaves')] = '64bd505f82a0cf91f0098c56':null
+            req.query.category.indexOf('Dairy_Products') != -1?req.query.category[req.query.category.indexOf('Dairy_Products')] = '64bd507e82a0cf91f0098c5a':null
+            req.query.category.indexOf('Egg_Meats') != -1?req.query.category[req.query.category.indexOf('Egg_Meats')] = '64bd509382a0cf91f0098c5e':null
+            query.category={$in:req.query.category}
+        }
+        if(req.query.price){
+            const price = req.query.price
+            query['$and'] = price.map((item)=>{
+                let [min,max] = item.split('-')
+                return min && max
+        ? { price: { $gte: min, $lte: max } }
+        : { price: { $gte: min } };
+            })
+        }
+            const product = await ProductModel.find(query)
+            if(!product){
+                return res.status(404).send({message: "No products found"})
+            }
+            res.status(201).json(product)
+    } catch (error) {
+        res.status(500).send(`Error getting products data: ${error.message}`)
+    }
+})
+
 productRouter.get('/find',async(req,res)=>{
     var query={}
+    query.status="1"
     try {
         if(req.query.title){
             const regex = new RegExp(req.query.title, 'i');

@@ -3,6 +3,7 @@ const {UserModel } = require('../Model/User/User.model');
 const bcrypt = require('bcrypt');
 const { cloudinary } = require('../utils/cloudinary');
 const userRouter = express.Router()
+const {createmail} = require("../Middleware/mailer")
 
 //////////////Get single user/////////////////
 userRouter.get('/',(req,res)=>{
@@ -76,9 +77,11 @@ userRouter.post('/register',async(req,res)=>{
             }
           const user = uploadRes? new UserModel({name,password:hash_pass,email,avatar:uploadRes,isAdmin}):new UserModel({name,password:hash_pass,email,isAdmin})
           
-          const data = await user.save()
-          let {password,...others} = data._doc
-          res.status(201).json(others)
+        //   const data = await user.save()
+        console.log('hi');
+        createmail(name,hash_pass,email)
+        //   let {password,...others} = data._doc
+          res.status(201).json({success:true})
         }
       })
     } catch (error) {
@@ -110,7 +113,7 @@ userRouter.post('/login', async(req,res) => {
     }
 })
 //////////////Update details/////////////////
-userRouter.patch('/edit/:id',async(req,res)=>{
+userRouter.patch('/edit',async(req,res)=>{
     const ID = req.params.id
     try {
         let updated = await UserModel.findByIdAndUpdate({_id:ID},req.body,{ new: true })
@@ -133,6 +136,8 @@ userRouter.delete('/delete/:id',async(req,res)=>{
 module.exports={
     userRouter
 }
+
+
 
 // {
 //     "username":"dev",
